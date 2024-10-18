@@ -28,7 +28,7 @@ export const UserDropdown = () => {
             as='button'
             color='secondary'
             size='md'
-            src='https://i.pravatar.cc/150?u=a042581f4e29026704d'
+            src='https://img.freepik.com/free-photo/celebration-deity-navratri_23-2151220077.jpg?t=st=1729275966~exp=1729279566~hmac=ec4825d2bb780c0f673112f23e381718ff7bc60e471353f47a8478e4f35692e4&w=360'
           />
         </DropdownTrigger>
       </NavbarItem>
@@ -39,7 +39,7 @@ export const UserDropdown = () => {
           key='profile'
           className='flex flex-col justify-start w-full items-start'>
           <p>Signed in as</p>
-          <p>zoey@example.com</p>
+          <p>protect-her@gmail.com</p>
         </DropdownItem>
         <DropdownItem key='settings'>My Settings</DropdownItem>
         <DropdownItem key='team_settings'>Team Settings</DropdownItem>

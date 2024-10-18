@@ -13,7 +13,7 @@ export const Login = () => {
   const router = useRouter();
 
   const initialValues: LoginFormType = {
-    email: "admin@acme.com",
+    email: "admin@srcas.ac.in",
     password: "admin",
   };
 
