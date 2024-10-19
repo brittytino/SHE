@@ -17,37 +17,54 @@ export const NotificationsDropdown = () => {
           <NotificationIcon />
         </NavbarItem>
       </DropdownTrigger>
-      <DropdownMenu className="w-80" aria-label="Avatar Actions">
-        <DropdownSection title="Notificacions">
+      <DropdownMenu className="w-80" aria-label="Safety Notifications">
+        <DropdownSection title="Notifications">
+          {/* Notification 1: Emergency Contact Alert */}
           <DropdownItem
             classNames={{
               base: "py-2",
               title: "text-base font-semibold",
             }}
             key="1"
-            description="Sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim."
+            description="Your emergency contact has been notified about your location."
           >
-            📣 Edit your information
+            🚨 Emergency Alert Sent
           </DropdownItem>
+
+          {/* Notification 2: Safety Tip */}
           <DropdownItem
             key="2"
             classNames={{
               base: "py-2",
               title: "text-base font-semibold",
             }}
-            description="Sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim."
+            description="Remember to always keep your GPS enabled for real-time tracking in case of emergencies."
           >
-            🚀 Say goodbye to paper receipts!
+            🛡️ Safety Tip: Stay GPS Enabled
           </DropdownItem>
+
+          {/* Notification 3: Location Shared */}
           <DropdownItem
             key="3"
             classNames={{
               base: "py-2",
               title: "text-base font-semibold",
             }}
-            description="Sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim."
+            description="Your current location has been shared with your trusted contacts."
           >
-            📣 Edit your information
+            📍 Location Shared
+          </DropdownItem>
+
+          {/* Notification 4: Check-in Reminder */}
+          <DropdownItem
+            key="4"
+            classNames={{
+              base: "py-2",
+              title: "text-base font-semibold",
+            }}
+            description="Don't forget to check in with your trusted circle every hour when traveling alone."
+          >
+            ⏰ Safety Check-In Reminder
           </DropdownItem>
         </DropdownSection>
       </DropdownMenu>

@@ -1,7 +1,6 @@
 import { Input, Link, Navbar, NavbarContent } from "@nextui-org/react";
 import React from "react";
 import { FeedbackIcon } from "../icons/navbar/feedback-icon";
-import { GithubIcon } from "../icons/navbar/github-icon";
 import { SupportIcon } from "../icons/navbar/support-icon";
 import { SearchIcon } from "../icons/searchicon";
 import { BurguerButton } from "./burguer-button";
@@ -52,12 +51,7 @@ export const NavbarWrapper = ({ children }: Props) => {
             <SupportIcon />
           </div>
 
-          <Link
-            href="https://github.com/Siumauricio/nextui-dashboard-template"
-            target={"_blank"}
-          >
-            <GithubIcon />
-          </Link>
+         
           <NavbarContent>
             <UserDropdown />
           </NavbarContent>
