@@ -10,9 +10,9 @@ export const PanicButton: React.FC = () => {
 
   // Load the sound from the public directory
   const sound = new Howl({
-    src: ['/assets/sos.mp3'], // Adjusted path for Next.js public directory
-    volume: 1.0,
-    loop: true,
+    src: ['./assets/sos.mp3'], // Adjusted path for Next.js public directory
+    volume: 1.0, // Ensure full volume
+    loop: true,  // Loop the sound
   });
 
   // Function to send SMS alert
@@ -55,8 +55,9 @@ export const PanicButton: React.FC = () => {
       alert("Geolocation is not supported by your browser.");
     }
 
+    // Continuous vibration until stopped
     if (navigator.vibrate) {
-      navigator.vibrate([500, 500, 500]); // Vibrate for 500ms
+      navigator.vibrate([500, 500, 500]); // Vibrate for 500ms, 500ms off, and repeat
     }
   };
 
