@@ -42,7 +42,7 @@ export const UserDropdown = () => {
           <p>protect-her@gmail.com</p>
         </DropdownItem>
         <DropdownItem key='settings'>My Settings</DropdownItem>
-        <DropdownItem key='team_settings'>Team Settings</DropdownItem>
+        <DropdownItem key='team_settings'>Alert Settings</DropdownItem>
         <DropdownItem key='analytics'>Analytics</DropdownItem>
         <DropdownItem key='system'>System</DropdownItem>
         <DropdownItem key='configurations'>Configurations</DropdownItem>
