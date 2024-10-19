@@ -7,7 +7,8 @@ import { CardBalance2 } from "./card-balance2";
 import { CardBalance3 } from "./card-balance3";
 import { CardBalance4 } from "./card-balance4";
 import { CardAgents } from "./card-agents";
-import { CardTransactions } from "./card-transactions";
+import { CardSafetyLogs } from "./card-transactions";
+import SaferRoute from "./safer-route";
 import { PanicButton } from "./pannic-button";
 import { Link } from "@nextui-org/react";
 import NextLink from "next/link";
@@ -47,10 +48,11 @@ export const Content = () => (
         <div className="flex flex-col justify-center gap-4 flex-wrap md:flex-nowrap md:flex-col">
           <CardAgents />
           
-          <CardTransactions />
+          <CardSafetyLogs />
         </div>
       </div>
     </div>
+    <SaferRoute />
 
     {/* Table Latest Users */}
     <div className="flex flex-col justify-center w-full py-5 px-4 lg:px-0  max-w-[90rem] mx-auto gap-3">

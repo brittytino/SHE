@@ -1,70 +1,99 @@
-import { Avatar, Card, CardBody } from "@nextui-org/react";
-import React from "react";
+import { Card, CardBody } from "@nextui-org/react";
+import React, { useEffect, useState } from "react";
+import { FaShieldAlt, FaBell, FaMapMarkerAlt, FaCheckCircle } from "react-icons/fa";
 
-const items = [
+// Define the log type
+interface SafetyLog {
+  action: string;
+  icon: React.ReactNode;
+  status: string;
+  date: string; // Add date property
+}
+
+// Sample safety-related logs
+const initialSafetyLogs: SafetyLog[] = [
   {
-    name: "Jose Perez",
-    picture: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-    amount: "4500 USD",
-    date: "9/20/2021",
+    action: "Safety Alert Activated",
+    icon: <FaBell />,
+    status: "In Progress",
+    date: "", // Initialize empty date
   },
   {
-    name: "Jose Perez",
-    picture: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-    amount: "4500 USD",
-    date: "9/20/2021",
+    action: "Shared Location",
+    icon: <FaMapMarkerAlt />,
+    status: "Completed",
+    date: "",
   },
   {
-    name: "Jose Perez",
-    picture: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-    amount: "4500 USD",
-    date: "9/20/2021",
+    action: "Contacted Emergency Services",
+    icon: <FaShieldAlt />,
+    status: "Alert Sent",
+    date: "",
   },
   {
-    name: "Jose Perez",
-    picture: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-    amount: "4500 USD",
-    date: "9/20/2021",
-  },
-  {
-    name: "Jose Perez",
-    picture: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-    amount: "4500 USD",
-    date: "9/20/2021",
+    action: "Safety Check Completed",
+    icon: <FaCheckCircle />,
+    status: "Safe",
+    date: "",
   },
 ];
 
-export const CardTransactions = () => {
+export const CardSafetyLogs = () => {
+  const [safetyLogs, setSafetyLogs] = useState<SafetyLog[]>(initialSafetyLogs);
+
+  // Function to get today's date
+  const getTodayDate = () => {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    return new Date().toLocaleDateString(undefined, options);
+  };
+
+  useEffect(() => {
+    const updatedLogs = safetyLogs.map(log => ({ ...log, date: getTodayDate() }));
+    setSafetyLogs(updatedLogs);
+  }, []);
+
   return (
-    <Card className=" bg-default-50 rounded-xl shadow-md px-3">
-      <CardBody className="py-5 gap-4">
-        <div className="flex gap-2.5 justify-center">
-          <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
+    <Card className="bg-default-50 rounded-xl shadow-md p-4">
+      <CardBody className="py-5">
+        {/* Header section */}
+        <div className="flex justify-center mb-4">
+          <div className="border-dashed border-2 border-divider py-2 px-6 rounded-xl">
             <span className="text-default-900 text-xl font-semibold">
-              Latest Transactions
+              Women Safety - Activity Log
             </span>
           </div>
         </div>
 
-        <div className="flex flex-col gap-6 ">
-          {items.map((item) => (
-            <div key={item.name} className="grid grid-cols-4 w-full">
-              <div className="w-full">
-                <Avatar
-                  isBordered
-                  color="secondary"
-                  src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
-                />
+        {/* List of logs */}
+        <div className="flex flex-col gap-4">
+          {safetyLogs.map((log, index) => (
+            <div key={index} className="flex items-center justify-between border-b py-2">
+              {/* Safety Icon */}
+              <div className="flex justify-center text-default-900 w-1/4">
+                {log.icon}
               </div>
 
-              <span className="text-default-900  font-semibold">
-                {item.name}
-              </span>
-              <div>
-                <span className="text-success text-xs">{item.amount}</span>
+              {/* Action Name */}
+              <span className="text-default-600 font-semibold w-2/4 text-center">{log.action}</span>
+
+              {/* Status */}
+              <div className="w-1/4 text-center">
+                <span
+                  className={`text-xs font-semibold ${
+                    log.status === "Safe"
+                      ? "text-green-600"
+                      : log.status === "Alert Sent"
+                      ? "text-red-600"
+                      : "text-yellow-600"
+                  }`}
+                >
+                  {log.status}
+                </span>
               </div>
-              <div>
-                <span className="text-default-500 text-xs">{item.date}</span>
+
+              {/* Date */}
+              <div className="w-1/4 text-center">
+                <span className="text-default-500 text-xs">{log.date}</span>
               </div>
             </div>
           ))}
