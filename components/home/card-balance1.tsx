@@ -10,7 +10,7 @@ export const CardBalance1 = () => {
           <Community />
           <div className="flex flex-col">
             <span className="text-white">Live Location Sharing</span>
-            <span className="text-white text-xs">1311 Active User's</span>
+            <span className="text-white text-xs">1311 Active User&apos;s</span>
           </div>
         </div>
         

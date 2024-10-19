@@ -75,14 +75,14 @@ export const CardAgents = () => {
         <div className="flex gap-2.5 justify-center">
           <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
             <span className="text-default-900 text-xl font-semibold">
-              {"⭐"} Meet your Nearby Friends
+              {"⭐"} Meet your Nearby Friend&apos;s
             </span>
           </div>
         </div>
 
         <div className="flex items-center gap-6 flex-col">
           <span className="text-xs text-center">
-            Women's Safety First! You can track your location and stay connected with nearby trusted contacts.
+            Women&apos;s Safety First! You can track your location and stay connected with nearby trusted contacts.
           </span>
 
           {/* AvatarGroup showcasing nearby friends (example) */}
