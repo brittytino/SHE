@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardBody } from '@nextui-org/react';
-import { FaBell, FaStop } from 'react-icons/fa';
+import { FaExclamationTriangle } from 'react-icons/fa';
 import { Howl } from 'howler';
 
 export const PanicButton: React.FC = () => {
   const [isAlerting, setIsAlerting] = useState(false);
+  const [vibrationInterval, setVibrationInterval] = useState<NodeJS.Timeout | null>(null);
 
-  // Load a loud sound
+  // Load a loud SOS sound
   const sound = new Howl({
-    src: ['https://www.soundjay.com/button/sounds/beep-07.mp3'], // Loud beep sound
+    src: ['/assets/sos.mp3'], // Correct path for Next.js
     volume: 1.0,
-    loop: true, // Loop the sound
+    loop: true,
+    onplayerror: () => {
+      console.error('Error playing sound. Check the file path or format.');
+    },
   });
 
   const handlePanicClick = () => {
@@ -25,9 +29,11 @@ export const PanicButton: React.FC = () => {
     sound.play();
     setIsAlerting(true);
 
-    // Continuous vibration
     if (navigator.vibrate) {
-      navigator.vibrate([500, 500, 500]); // Vibrate pattern
+      const interval = setInterval(() => {
+        navigator.vibrate([500, 500, 500]);
+      }, 1000);
+      setVibrationInterval(interval);
     }
   };
 
@@ -35,31 +41,34 @@ export const PanicButton: React.FC = () => {
     sound.stop();
     setIsAlerting(false);
 
+    if (vibrationInterval) {
+      clearInterval(vibrationInterval);
+      setVibrationInterval(null);
+    }
+
     if (navigator.vibrate) {
-      navigator.vibrate(0); // Stop vibrating
+      navigator.vibrate(0);
     }
   };
 
-  // Clean up sound on unmount
   useEffect(() => {
     return () => {
       sound.unload();
+      if (vibrationInterval) {
+        clearInterval(vibrationInterval);
+      }
     };
-  }, [sound]);
+  }, [vibrationInterval]);
 
   return (
-    <Card className="bg-red-500 text-white rounded-xl shadow-md px-3">
-      <CardBody className="py-5 flex flex-col items-center gap-4">
-        <FaBell size={40} className="text-white" />
-        <span className="text-xl font-semibold">{isAlerting ? 'Alert Active!' : 'Panic Button'}</span>
-        <button
-          className={`${
-            isAlerting ? 'bg-red-600' : 'bg-white'
-          } text-red-500 p-3 rounded-full shadow-lg hover:bg-red-100 transition`}
+    <Card className="bg-red-600 text-white rounded-xl shadow-md px-4">
+      <CardBody className="py-6 flex flex-col items-center gap-5">
+        <FaExclamationTriangle
+          size={70}
+          className="text-yellow-300 cursor-pointer transition-transform duration-300 hover:scale-110"
           onClick={handlePanicClick}
-        >
-          {isAlerting ? <FaStop size={24} /> : 'Trigger Panic Alert'}
-        </button>
+        />
+        <h2 className="text-2xl font-bold">Emergency SOS</h2>
       </CardBody>
     </Card>
   );

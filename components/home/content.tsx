@@ -33,6 +33,7 @@ export const Content = () => (
 
         {/* Chart */}
         <div className="h-full flex flex-col gap-2">
+        <PanicButton />
           <h3 className="text-xl font-semibold">SHE - Report Statistics</h3>
           <div className="w-full bg-default-50 shadow-lg rounded-2xl p-6 ">
             <Chart />
@@ -45,7 +46,7 @@ export const Content = () => (
         <h3 className="text-xl font-semibold">Real-Time Map View</h3>
         <div className="flex flex-col justify-center gap-4 flex-wrap md:flex-nowrap md:flex-col">
           <CardAgents />
-          <PanicButton />
+          
           <CardTransactions />
         </div>
       </div>
