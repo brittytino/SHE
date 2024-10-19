@@ -2,33 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardBody } from '@nextui-org/react';
 import { FaBell, FaStop } from 'react-icons/fa';
 import { Howl } from 'howler';
-import axios from 'axios';
 
 export const PanicButton: React.FC = () => {
-  const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [isAlerting, setIsAlerting] = useState(false);
 
-  // Load the sound from the public directory
+  // Load a loud sound
   const sound = new Howl({
-    src: ['./assets/sos.mp3'], // Adjusted path for Next.js public directory
-    volume: 1.0, // Ensure full volume
-    loop: true,  // Loop the sound
+    src: ['https://www.soundjay.com/button/sounds/beep-07.mp3'], // Loud beep sound
+    volume: 1.0,
+    loop: true, // Loop the sound
   });
 
-  // Function to send SMS alert
-  const sendAlertSMS = async (message: string) => {
-    try {
-      const response = await axios.post('/api/send-sms', {
-        message,
-        number: '+919786350537', // International format for Indian number
-      });
-      console.log('SMS sent successfully:', response.data);
-    } catch (error) {
-      console.error('Failed to send SMS', error);
-    }
-  };
-
-  // Handle panic button click
   const handlePanicClick = () => {
     if (isAlerting) {
       stopAlert();
@@ -37,38 +21,19 @@ export const PanicButton: React.FC = () => {
     }
   };
 
-  // Start alert process
   const startAlert = () => {
     sound.play();
     setIsAlerting(true);
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        setLocation({ latitude, longitude });
-
-        const alertMessage = `🚨 *Emergency Alert!* 🚨\nLocation: Lat ${latitude}, Long ${longitude}\nPlease take immediate action!\n\n*Web App SHE*`;
-        sendAlertSMS(alertMessage);
-        alert(alertMessage);
-      });
-    } else {
-      alert("Geolocation is not supported by your browser.");
-    }
-
-    // Continuous vibration until stopped
+    // Continuous vibration
     if (navigator.vibrate) {
-      navigator.vibrate([500, 500, 500]); // Vibrate for 500ms, 500ms off, and repeat
+      navigator.vibrate([500, 500, 500]); // Vibrate pattern
     }
   };
 
-  // Stop alert process
   const stopAlert = () => {
     sound.stop();
     setIsAlerting(false);
-
-    const safeMessage = `✅ *I'm safe now!*\nNo further action is needed.\nThank you for your concern.\n\n*Web App SHE*`;
-    sendAlertSMS(safeMessage);
-    alert(safeMessage);
 
     if (navigator.vibrate) {
       navigator.vibrate(0); // Stop vibrating
@@ -95,14 +60,6 @@ export const PanicButton: React.FC = () => {
         >
           {isAlerting ? <FaStop size={24} /> : 'Trigger Panic Alert'}
         </button>
-
-        {location && (
-          <div className="mt-4 text-center">
-            <p>Location:</p>
-            <p>Latitude: {location.latitude}</p>
-            <p>Longitude: {location.longitude}</p>
-          </div>
-        )}
       </CardBody>
     </Card>
   );
