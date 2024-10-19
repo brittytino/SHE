@@ -59,7 +59,7 @@ export const CardSafetyLogs = () => {
         <div className="flex justify-center mb-4">
           <div className="border-dashed border-2 border-divider py-2 px-6 rounded-xl">
             <span className="text-default-900 text-xl font-semibold">
-              Women Safety - Activity Log
+              Women Safety - Log
             </span>
           </div>
         </div>
