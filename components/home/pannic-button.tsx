@@ -17,12 +17,37 @@ export const PanicButton: React.FC = () => {
     },
   });
 
-  const handlePanicClick = () => {
+  const handlePanicClick = async () => {
     if (isAlerting) {
       stopAlert();
     } else {
       startAlert();
+      await fetchLocation();
     }
+  };
+
+  const fetchLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          sendLocationToWhatsApp(latitude, longitude);
+        },
+        (error) => {
+          console.error('Error fetching location:', error);
+        }
+      );
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+    }
+  };
+
+  const sendLocationToWhatsApp = (latitude: number, longitude: number) => {
+    const message = `Emergency! I need help. My location: https://maps.google.com/?q=${latitude},${longitude}`;
+    const phoneNumber = '+9109786350537'; // WhatsApp number
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+    window.open(url, '_blank'); // Open the WhatsApp chat in a new tab
   };
 
   const startAlert = () => {
