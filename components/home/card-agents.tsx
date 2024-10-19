@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Avatar, AvatarGroup, Card, CardBody } from "@nextui-org/react";
-import { GoogleMap, useLoadScript } from "@react-google-maps/api";
+import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 
 // Define the required libraries for the Google Maps API
-const libraries = ["places"];
+const libraries: ('places')[] = ["places"]; // Ensure this is typed correctly
 
 // Define the styling for the map container
 const mapContainerStyle = {
@@ -48,34 +48,17 @@ export const CardAgents = () => {
 
   // Handle any error in loading the Google Map script
   if (loadError) return <div>Error loading map</div>;
-  
+
   // Show a loading message while the Google Maps script is loading
   if (!isLoaded) return <div>Loading map...</div>;
 
-  // Function to create a marker using AdvancedMarkerElement if available, otherwise fallback to Marker
-  const createMarker = (map) => {
-    if (window.google.maps.marker?.AdvancedMarkerElement) {
-      // Use AdvancedMarkerElement if available
-      const marker = new window.google.maps.marker.AdvancedMarkerElement({
-        map,
-        position: location,
-      });
-    } else {
-      // Fallback to regular google.maps.Marker
-      new window.google.maps.Marker({
-        map,
-        position: location,
-      });
-    }
-  };
-
   return (
-    <Card className=" bg-default-50 rounded-xl shadow-md px-4 py-6 w-full">
+    <Card className="bg-default-50 rounded-xl shadow-md px-4 py-6 w-full">
       <CardBody className="py-5 gap-6">
         <div className="flex gap-2.5 justify-center">
           <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
             <span className="text-default-900 text-xl font-semibold">
-              {"⭐"} Meet your Nearby Friend&apos;s
+              {"⭐"} Meet your Nearby Friends&apos;
             </span>
           </div>
         </div>
@@ -100,8 +83,9 @@ export const CardAgents = () => {
               mapContainerStyle={mapContainerStyle}
               zoom={15} // Adjust the zoom level to your preference
               center={location} // Center the map on the user's current location
-              onLoad={createMarker} // Create a marker (Advanced or fallback) on load
-            />
+            >
+              <Marker position={location} /> {/* Add marker directly */}
+            </GoogleMap>
           </div>
         </div>
       </CardBody>
