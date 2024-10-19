@@ -35,7 +35,7 @@ export const AuthLayoutWrapper = ({ children }: Props) => {
         <div className='z-10'>
           <h1 className='font-bold text-[45px]'>SHE - Secure in Her Environment</h1>
           <div className='font-light text-slate-400 mt-4'>
-          Because "hope for the best" is not a security plan ,Stay safe. Click the button, and let’s get started.
+            Because &quot;hope for the best&quot; is not a security plan. Stay safe. Click the button, and let’s get started.
           </div>
         </div>
       </div>
