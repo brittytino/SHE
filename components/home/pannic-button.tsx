@@ -1,4 +1,3 @@
-// components/home/panic-button.tsx
 import React, { useState, useEffect } from 'react';
 import { Card, CardBody } from '@nextui-org/react';
 import { FaBell, FaStop } from 'react-icons/fa';
@@ -9,13 +8,14 @@ export const PanicButton: React.FC = () => {
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [isAlerting, setIsAlerting] = useState(false);
 
-  // Load the sound from the assets directory
+  // Load the sound from the public directory
   const sound = new Howl({
     src: ['/assets/sos.mp3'], // Adjusted path for Next.js public directory
     volume: 1.0,
     loop: true,
   });
 
+  // Function to send SMS alert
   const sendAlertSMS = async (message: string) => {
     try {
       const response = await axios.post('/api/send-sms', {
@@ -28,6 +28,7 @@ export const PanicButton: React.FC = () => {
     }
   };
 
+  // Handle panic button click
   const handlePanicClick = () => {
     if (isAlerting) {
       stopAlert();
@@ -36,6 +37,7 @@ export const PanicButton: React.FC = () => {
     }
   };
 
+  // Start alert process
   const startAlert = () => {
     sound.play();
     setIsAlerting(true);
@@ -58,6 +60,7 @@ export const PanicButton: React.FC = () => {
     }
   };
 
+  // Stop alert process
   const stopAlert = () => {
     sound.stop();
     setIsAlerting(false);
@@ -71,6 +74,7 @@ export const PanicButton: React.FC = () => {
     }
   };
 
+  // Clean up sound on unmount
   useEffect(() => {
     return () => {
       sound.unload();
@@ -85,7 +89,7 @@ export const PanicButton: React.FC = () => {
         <button
           className={`${
             isAlerting ? 'bg-red-600' : 'bg-white'
-          } text-red-500 p-3 rounded-full shadow-lg hover:bg-red-100`}
+          } text-red-500 p-3 rounded-full shadow-lg hover:bg-red-100 transition`}
           onClick={handlePanicClick}
         >
           {isAlerting ? <FaStop size={24} /> : 'Trigger Panic Alert'}

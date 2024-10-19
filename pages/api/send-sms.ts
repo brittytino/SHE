@@ -1,4 +1,3 @@
-// pages/api/send-sms.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 
