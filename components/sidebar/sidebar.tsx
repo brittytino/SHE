@@ -48,33 +48,33 @@ export const SidebarWrapper = () => {
             <SidebarMenu title="Main Menu">
               <SidebarItem
                 isActive={pathname === "/accounts"}
-                title="Accounts"
+                title="Contacts"
                 icon={<AccountsIcon />}
                 href="accounts"
               />
               <SidebarItem
                 isActive={pathname === "/payments"}
-                title="Payments"
+                title="Corporate Safety"
                 icon={<PaymentsIcon />}
               />
               <CollapseItems
                 icon={<BalanceIcon />}
-                items={["Banks Accounts", "Credit Cards", "Loans"]}
-                title="Balances"
+                items={["Deviation Alerts", "Path Sharing", "Safe Route"]}
+                title="Alerts"
               />
               <SidebarItem
                 isActive={pathname === "/customers"}
-                title="Customers"
+                title="Route History"
                 icon={<CustomersIcon />}
               />
               <SidebarItem
                 isActive={pathname === "/products"}
-                title="Products"
+                title="Panic Button"
                 icon={<ProductsIcon />}
               />
               <SidebarItem
                 isActive={pathname === "/reports"}
-                title="Reports"
+                title="Offline Access"
                 icon={<ReportsIcon />}
               />
             </SidebarMenu>
@@ -118,7 +118,7 @@ export const SidebarWrapper = () => {
             </Tooltip>
             <Tooltip content={"Profile"} color="primary">
               <Avatar
-                src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                src="https://img.freepik.com/free-photo/celebration-deity-navratri_23-2151220077.jpg?t=st=1729275966~exp=1729279566~hmac=ec4825d2bb780c0f673112f23e381718ff7bc60e471353f47a8478e4f35692e4&w=360"
                 size="sm"
               />
             </Tooltip>

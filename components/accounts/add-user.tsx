@@ -17,7 +17,7 @@ export const AddUser = () => {
     <div>
       <>
         <Button onPress={onOpen} color="primary">
-          Add User
+          Add Friend
         </Button>
         <Modal
           isOpen={isOpen}
@@ -28,7 +28,7 @@ export const AddUser = () => {
             {(onClose) => (
               <>
                 <ModalHeader className="flex flex-col gap-1">
-                  Add User
+                  Add Friend
                 </ModalHeader>
                 <ModalBody>
                   <Input label="Email" variant="bordered" />
@@ -48,7 +48,7 @@ export const AddUser = () => {
                     Close
                   </Button>
                   <Button color="primary" onPress={onClose}>
-                    Add User
+                    Add Friend
                   </Button>
                 </ModalFooter>
               </>

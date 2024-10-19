@@ -13,7 +13,7 @@ export const Register = () => {
   const router = useRouter();
 
   const initialValues: RegisterFormType = {
-    name: "Acme",
+    name: "Protect-Her",
     email: "admin@srcas.ac.in",
     password: "admin",
     confirmPassword: "admin",
