@@ -8,15 +8,13 @@ import { CardBalance3 } from "./card-balance3";
 import { CardBalance4 } from "./card-balance4";
 import { CardAgents } from "./card-agents";
 import { CardTransactions } from "./card-transactions";
+import { PanicButton } from "./pannic-button";
 import { Link } from "@nextui-org/react";
 import NextLink from "next/link";
 
-const Chart = dynamic(
-  () => import("../charts/steam").then((mod) => mod.Steam),
-  {
-    ssr: false,
-  }
-);
+const Chart = dynamic(() => import("../charts/steam").then((mod) => mod.Steam), {
+  ssr: false,
+});
 
 export const Content = () => (
   <div className="h-full lg:px-6">
@@ -47,6 +45,7 @@ export const Content = () => (
         <h3 className="text-xl font-semibold">Real-Time Map View</h3>
         <div className="flex flex-col justify-center gap-4 flex-wrap md:flex-nowrap md:flex-col">
           <CardAgents />
+          <PanicButton />
           <CardTransactions />
         </div>
       </div>
@@ -55,7 +54,9 @@ export const Content = () => (
     {/* Table Latest Users */}
     <div className="flex flex-col justify-center w-full py-5 px-4 lg:px-0  max-w-[90rem] mx-auto gap-3">
       <div className="flex  flex-wrap justify-between">
-        <h3 className="text-center text-xl font-semibold">Trusted Contacts Page</h3>
+        <h3 className="text-center text-xl font-semibold">
+          Trusted Contacts Page
+        </h3>
         <Link
           href="/accounts"
           as={NextLink}
