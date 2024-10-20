@@ -40,9 +40,9 @@ export const PanicButton: React.FC = () => {
     }
   };
 
-  // Prompt user to input phone number
+  // Prompt user to input phone number (only 10 digits)
   const askForPhoneNumber = () => {
-    const userInput = prompt('Please enter your phone number (Indian number starting with +91):');
+    const userInput = prompt('Please enter a 10-digit phone number:');
     const validPhoneNumber = validatePhoneNumber(userInput);
 
     if (validPhoneNumber) {
@@ -50,19 +50,19 @@ export const PanicButton: React.FC = () => {
       setUseRecentContact(false); // Use the entered number
       localStorage.setItem('phoneNumber', validPhoneNumber);
     } else {
-      alert('Please enter a valid Indian phone number.');
+      alert('Please enter a valid 10-digit Indian phone number.');
     }
   };
 
-  // Validate the phone number
+  // Validate the phone number (10 digits only, we assume +91 by default)
   const validatePhoneNumber = (number: string | null): string | null => {
-    const regex = /^\+91\d{10}$/;
-    return number && regex.test(number) ? number : null;
+    const regex = /^\d{10}$/;
+    return number && regex.test(number) ? `+91${number}` : null; // Automatically prepend +91
   };
 
   // Open WhatsApp with pre-filled message
   const sendLocationToWhatsApp = (location: string) => {
-    const contact = useRecentContact ? defaultPhoneNumber : phoneNumber;
+    const contact = useRecentContact ? `+91${defaultPhoneNumber}` : phoneNumber;
     const message = `🚨 Emergency! I need help. My live location: ${location}`;
     const url = `https://wa.me/${contact}?text=${encodeURIComponent(message)}`;
 
@@ -123,45 +123,45 @@ export const PanicButton: React.FC = () => {
   }, [vibrationInterval]);
 
   return (
-      <Card className="w-full max-w-md bg-gradient-to-r from-blue-50 to-indigo-100 justify-center items-center  bg-white border border-gray-200 rounded-xl shadow-xl p-6">
-        <CardBody className="flex flex-col items-center">
-          <FaExclamationTriangle
-            size={80}
-            className="text-red-600 animate-pulse cursor-pointer"
-            onClick={handlePanicClick}
-          />
-          <h2 className="text-2xl font-bold text-gray-800 mt-4 mb-6">
-            {isAlerting ? 'Stop SOS Alert' : 'Emergency SOS'}
-          </h2>
+    <Card className="w-full max-w-md bg-gradient-to-r from-blue-50 to-indigo-100 justify-center items-center bg-white border border-gray-200 rounded-xl shadow-xl p-6">
+      <CardBody className="flex flex-col items-center">
+        <FaExclamationTriangle
+          size={80}
+          className="text-red-600 animate-pulse cursor-pointer"
+          onClick={handlePanicClick}
+        />
+        <h2 className="text-2xl font-bold text-gray-800 mt-4 mb-6">
+          {isAlerting ? 'Stop SOS Alert' : 'Emergency SOS'}
+        </h2>
 
-          {locationLink && (
-            <p className="text-gray-600 text-sm text-center">
-              Sharing live location: <a href={locationLink} target="_blank" rel="noopener noreferrer" className="underline text-blue-600">{locationLink}</a>
-            </p>
-          )}
+        {locationLink && (
+          <p className="text-gray-600 text-sm text-center">
+            Sharing live location: <a href={locationLink} target="_blank" rel="noopener noreferrer" className="underline text-blue-600">{locationLink}</a>
+          </p>
+        )}
 
-          <div className="w-full">
-            <div className="flex flex-col items-center mb-4">
-              <label className="text-sm font-medium text-gray-600">User Contact</label>
-              <button
-                className={`mt-2 px-4 py-2 text-sm rounded-lg border ${useRecentContact ? 'border-gray-300 text-gray-500' : 'border-green-500 text-green-600'}`}
-                onClick={askForPhoneNumber}
-              >
-                {phoneNumber ? `Send to: ${phoneNumber}` : 'Enter new phone number'}
-              </button>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <label className="text-sm font-medium text-gray-600">Recent Contact</label>
-              <button
-                className={`mt-2 px-4 py-2 text-sm rounded-lg border ${useRecentContact ? 'border-green-500 text-green-600' : 'border-gray-300 text-gray-500'}`}
-                onClick={() => setUseRecentContact(true)}
-              >
-                Send to: {defaultPhoneNumber}
-              </button>
-            </div>
+        <div className="w-full">
+          <div className="flex flex-col items-center mb-4">
+            <label className="text-sm font-medium text-gray-600">User Contact</label>
+            <button
+              className={`mt-2 px-4 py-2 text-sm rounded-lg border ${useRecentContact ? 'border-gray-300 text-gray-500' : 'border-green-500 text-green-600'}`}
+              onClick={askForPhoneNumber}
+            >
+              {phoneNumber ? `Send to: ${phoneNumber}` : 'Enter new phone number'}
+            </button>
           </div>
-        </CardBody>
-      </Card>
+
+          <div className="flex flex-col items-center">
+            <label className="text-sm font-medium text-gray-600">Recent Contact</label>
+            <button
+              className={`mt-2 px-4 py-2 text-sm rounded-lg border ${useRecentContact ? 'border-green-500 text-green-600' : 'border-gray-300 text-gray-500'}`}
+              onClick={() => setUseRecentContact(true)}
+            >
+              Send to: +91{defaultPhoneNumber}
+            </button>
+          </div>
+        </div>
+      </CardBody>
+    </Card>
   );
 };

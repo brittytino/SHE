@@ -1,96 +1,89 @@
-import { Card, CardBody, Input, Button } from "@nextui-org/react";
 import React, { useState } from "react";
-import { Community } from "../icons/community";
+import { Card, CardBody, Button, Modal, Spinner } from "@nextui-org/react";
+import { Community } from "../icons/community"; // Assuming you have this icon
+
+// Function to construct the WhatsApp URL with the location
+const sendWhatsAppMessage = (location: string) => {
+  const phoneNumber = "919786350537"; // Default Indian number (add country code for India)
+  const message = `🚨 Emergency! Please help me. My current location is: ${location}`;
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  window.open(whatsappUrl, "_blank");
+};
 
 export const CardBalance1 = () => {
-  const [phoneNumber, setPhoneNumber] = useState(""); // State for phone number
-  const [location, setLocation] = useState(null);
-  const [isSending, setIsSending] = useState(false); // State to handle loading state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [statusMessage, setStatusMessage] = useState("");
 
-  // Function to fetch user's current location
-  const handleLocationClick = async () => {
-    if (!/^\d{10}$/.test(phoneNumber)) {
-      alert("Please enter a valid 10-digit phone number.");
-      return;
-    }
+  // Function to handle the card click and open the modal
+  const handleClick = () => {
+    setIsModalOpen(true);
+  };
+
+  // Function to handle location sharing
+  const handleLocationShare = () => {
+    setIsLoading(true);
+    setStatusMessage(""); // Clear previous status messages
+    setIsModalOpen(false); // Close modal when confirmed
 
     if (navigator.geolocation) {
-      setIsSending(true); // Set loading state to true
       navigator.geolocation.getCurrentPosition(
-        async (position) => {
+        (position) => {
           const { latitude, longitude } = position.coords;
-          setLocation({ latitude, longitude });
-          
-          // Send location to emergency contact
-          await sendLocationToEmergencyContact(latitude, longitude);
+          const location = `https://www.google.com/maps?q=${latitude},${longitude}`;
+          sendWhatsAppMessage(location); // Send location via WhatsApp
+          setStatusMessage("📍 Live location has been shared successfully!");
+          setIsLoading(false);
         },
         (error) => {
-          console.error("Error fetching location: ", error);
-          setIsSending(false); // Stop loading state on error
+          setStatusMessage("❌ Unable to fetch location. Please enable location services.");
+          setIsLoading(false);
         }
       );
     } else {
-      console.error("Geolocation is not supported by this browser.");
-    }
-  };
-
-  // Function to send the location via backend (e.g., Twilio)
-  const sendLocationToEmergencyContact = async (latitude, longitude) => {
-    try {
-      const response = await fetch("/api/send-sms", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          phone: `+91${phoneNumber}`, // Emergency contact number with +91
-          message: `Emergency! Current Location: https://www.google.com/maps?q=${latitude},${longitude}`,
-        }),
-      });
-
-      if (!response.ok) {
-        console.error("Failed to send SMS.");
-      } else {
-        console.log("SMS sent successfully!");
-      }
-    } catch (error) {
-      console.error("Error sending SMS: ", error);
-    } finally {
-      setIsSending(false); // Stop loading state after SMS is sent
+      setStatusMessage("❌ Geolocation is not supported by this browser.");
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <Card className="xl:max-w-sm bg-gradient-to-r from-purple-500 to-blue-600 rounded-xl shadow-md w-full">
-        <CardBody className="py-5 overflow-hidden text-center text-white">
-          <div className="flex gap-2.5 justify-center mb-4">
+    <>
+      <Card
+        className="xl:max-w-sm bg-primary rounded-xl shadow-md px-3 w-full cursor-pointer"
+        onClick={handleClick} // Open modal on card click
+      >
+        <CardBody className="py-5 overflow-hidden">
+          <div className="flex gap-2.5 items-center">
             <Community />
             <div className="flex flex-col">
-              <span className="text-2xl font-semibold">Live Location Sharing</span>
-              <span className="text-sm">1311 Active User&apos;s</span>
+              <span className="text-white">Live Location Sharing</span>
+              <span className="text-white text-xs">1311 Active Users</span>
             </div>
           </div>
-          <div className="mb-4">
-            <Input
-              type="text"
-              label="Phone Number"
-              value={phoneNumber}
-              placeholder="Enter 10-digit number"
-              maxLength={10}
-              className="bg-gray-200 text-gray-900 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 w-full"
-              onChange={(e) => setPhoneNumber(e.target.value)}
-            />
-          </div>
-          <Button
-            className="bg-white text-blue-600 hover:bg-blue-600 hover:text-white w-full font-bold py-2 rounded-lg transition-all duration-200"
-            onPress={handleLocationClick}
-            isLoading={isSending}
-          >
-            {isSending ? "Sending..." : "Send Emergency SMS"}
-          </Button>
+          {isLoading && (
+            <div className="flex justify-center mt-3">
+              <Spinner color="white" />
+            </div>
+          )}
+          {statusMessage && (
+            <div className="text-white text-xs mt-3 text-center">
+              {statusMessage}
+            </div>
+          )}
         </CardBody>
       </Card>
-    </div>
+
+      {/* Modal for confirmation */}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <div className="p-4">
+          <h3 className="text-lg font-semibold">Confirm Location Sharing</h3>
+          <p>Do you want to share your live location via WhatsApp?</p>
+        </div>
+        <div className="flex justify-end p-4 gap-2">
+          <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
+          <Button onClick={handleLocationShare}>Share Location</Button>
+        </div>
+      </Modal>
+    </>
   );
 };
