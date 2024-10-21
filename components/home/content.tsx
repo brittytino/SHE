@@ -9,6 +9,8 @@ import { CardBalance4 } from "./card-balance4";
 import { CardAgents } from "./card-agents";
 import { CardSafetyLogs } from "./card-transactions";
 import SaferRoute from "./safer-route";
+import ChatbotWidget from "./chat-bot";
+
 import { PanicButton } from "./pannic-button";
 import { Link } from "@nextui-org/react";
 import NextLink from "next/link";
@@ -47,7 +49,7 @@ export const Content = () => (
         <h3 className="text-xl font-semibold">Real-Time Map View</h3>
         <div className="flex flex-col justify-center gap-4 flex-wrap md:flex-nowrap md:flex-col">
           <CardAgents />
-          
+          <ChatbotWidget />
           <CardSafetyLogs />
         </div>
       </div>
