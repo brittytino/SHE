@@ -1,58 +1,53 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { FiSend, FiMessageCircle, FiX } from 'react-icons/fi';
 
-// Define types for message
 type Message = {
   sender: 'You' | 'AI';
   text: string;
 };
 
+const predefinedQA = [
+  // Your predefined questions and answers
+];
+
 const ChatbotWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { sender: 'AI', text: 'Hello! I am your assistant. How can I help you today?' },
+    { sender: 'AI', text: 'Hello! I am your SHE Assistant. How are you feeling today?' },
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Assuming you will have a valid Gemini API Key for your project
-  const apiKey = process.env.REACT_APP_GEMINI_API_KEY;
+  // Basic emotion detection function
+  const detectEmotion = (userInput: string) => {
+    const lowerInput = userInput.toLowerCase();
+    if (lowerInput.includes('happy') || lowerInput.includes('great')) {
+      return 'happy';
+    } else if (lowerInput.includes('sad') || lowerInput.includes('down')) {
+      return 'sad';
+    } else if (lowerInput.includes('angry') || lowerInput.includes('frustrated')) {
+      return 'angry';
+    } else if (lowerInput.includes('worried') || lowerInput.includes('scared')) {
+      return 'anxious';
+    }
+    return 'neutral';
+  };
 
-  const getGeminiResponse = async (userInput: string) => {
-    // Replace with the actual Gemini API URL when it's available
-    const endpoint = 'https://api.gemini.com/v1/chat'; // Replace with actual endpoint
-
-    try {
-      const response = await axios.post(
-        endpoint,
-        {
-          model: 'gemini-large', // Hypothetical model name (adjust once API is released)
-          messages: [
-            { role: 'system', content: 'You are a helpful assistant specializing in women’s safety and basic health.' },
-            { role: 'user', content: userInput },
-          ],
-          max_tokens: 100,
-          temperature: 0.7,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiKey}`,
-          },
-        }
-      );
-
-      const aiResponse = response.data.choices[0].message.content.trim();
-      return aiResponse;
-    } catch (error) {
-      console.error('Error fetching Gemini response:', error);
-      // Provide a more informative error message to the user
-      return 'An error occurred while contacting the assistant. Please try again later.';
+  const getSafetyTips = (emotion: string) => {
+    switch (emotion) {
+      case 'happy':
+        return 'I’m glad to hear you’re feeling good! Remember, staying safe is important. Always trust your instincts and reach out if you need help.';
+      case 'sad':
+        return 'I understand that things can be tough. It’s essential to talk about your feelings. If you ever feel unsafe, don’t hesitate to seek help or use our SHE app for safety tips.';
+      case 'angry':
+        return 'It’s normal to feel frustrated sometimes. Remember to take deep breaths. If you’re in a situation where you feel unsafe, use the SHE app to find quick safety tips and resources.';
+      case 'anxious':
+        return 'I’m here for you. It’s okay to feel anxious; it’s a natural response. Keep your phone close, and consider downloading our SHE app, which provides safety tips and support when you need it.';
+      default:
+        return 'Let’s talk about safety! If you have any questions or concerns, feel free to ask. You can also check our SHE app for more information.';
     }
   };
 
-  // Handle sending a message
   const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -61,31 +56,33 @@ const ChatbotWidget = () => {
     const userMessage: Message = { sender: 'You', text: input };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
     setInput('');
-
     setIsLoading(true);
 
-    // Fetch Gemini AI response
-    const aiResponse = await getGeminiResponse(input);
-    const aiMessage: Message = { sender: 'AI', text: aiResponse };
+    const detectedEmotion = detectEmotion(input);
+    const safetyMessage = getSafetyTips(detectedEmotion);
 
-    setMessages((prevMessages) => [...prevMessages, aiMessage]);
-    setIsLoading(false);
+    // Simulate an AI response
+    setTimeout(() => {
+      const aiMessage: Message = { sender: 'AI', text: safetyMessage };
+      setMessages((prevMessages) => [...prevMessages, aiMessage]);
+      setIsLoading(false);
+    }, 1000);
   };
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="bg-purple-600 text-white rounded-full p-4 shadow-lg hover:bg-purple-700 focus:outline-none"
+        className="bg-purple-600 text-white rounded-full p-4 shadow-lg hover:bg-purple-700 focus:outline-none transition-all duration-300"
       >
         {isOpen ? <FiX className="text-2xl" /> : <FiMessageCircle className="text-2xl" />}
       </button>
 
       {isOpen && (
-        <div className="w-80 sm:w-96 h-96 bg-white shadow-lg rounded-lg flex flex-col justify-between transition-all duration-300 transform translate-y-0 animate-slideUp">
+        <div className="w-80 sm:w-96 h-96 bg-white shadow-lg rounded-lg flex flex-col justify-between transition-all duration-300">
           <div className="bg-purple-600 text-white p-4 rounded-t-lg">
             <h3 className="text-lg font-semibold">SHE Assistant</h3>
-            <p className="text-xs">Here to help with safety and health tips!</p>
+            <p className="text-xs">Your safety is my priority!</p>
           </div>
 
           <div className="p-4 flex-1 overflow-y-auto space-y-2">
@@ -117,12 +114,12 @@ const ChatbotWidget = () => {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask me about safety or health..."
+              placeholder="Your message..."
               className="flex-1 p-2 rounded-lg focus:outline-none focus:ring focus:border-purple-400"
             />
             <button
               type="submit"
-              className="ml-2 bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700 focus:outline-none"
+              className="ml-2 bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700 focus:outline-none transition-all duration-300"
             >
               <FiSend className="text-lg" />
             </button>
