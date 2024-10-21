@@ -9,7 +9,7 @@ export const CardBalance4 = () => {
       target="_blank"
       rel="noopener noreferrer"
     >
-      <Card className="xl:max-w-sm bg-red-500 rounded-xl shadow-md px-3 w-full cursor-pointer">
+      <Card className="xl:max-w-sm bg-red-500 rounded-xl shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer w-full">
         <CardBody className="py-5">
           <div className="flex gap-2.5">
             <Community />
