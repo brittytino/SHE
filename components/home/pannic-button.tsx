@@ -69,6 +69,15 @@ export const PanicButton: React.FC = () => {
     window.open(url, '_blank');
   };
 
+  // Send "I'm safe" message to WhatsApp
+  const sendSafeMessage = () => {
+    const contact = useRecentContact ? `+91${defaultPhoneNumber}` : phoneNumber;
+    const message = `✅ I'm safe!`;
+    const url = `https://wa.me/${contact}?text=${encodeURIComponent(message)}`;
+
+    window.open(url, '_blank');
+  };
+
   // Start alert
   const startAlert = () => {
     sound.play();
@@ -85,8 +94,9 @@ export const PanicButton: React.FC = () => {
 
   // Stop alert
   const stopAlert = () => {
-    sound.stop();
+    sound.stop(); // Ensure the sound stops
     setIsAlerting(false);
+    sendSafeMessage(); // Send "I'm safe" message
 
     if (vibrationInterval) {
       clearInterval(vibrationInterval);
@@ -101,9 +111,9 @@ export const PanicButton: React.FC = () => {
   // Handle panic button click
   const handlePanicClick = () => {
     if (isAlerting) {
-      stopAlert();
+      stopAlert(); // Stop the alert
     } else {
-      startAlert();
+      startAlert(); // Start the alert
     }
   };
 
@@ -123,45 +133,104 @@ export const PanicButton: React.FC = () => {
   }, [vibrationInterval]);
 
   return (
-    <Card className="w-full max-w-md bg-gradient-to-r from-blue-50 to-indigo-100 justify-center items-center bg-white border border-gray-200 rounded-xl shadow-xl p-6">
+    <Card className="xl:max-w-lg bg-default-50 rounded-xl shadow-lg p-8 w-full mx-auto transition-transform transform hover:scale-105">
       <CardBody className="flex flex-col items-center">
         <FaExclamationTriangle
-          size={80}
-          className="text-red-600 animate-pulse cursor-pointer"
+          size={100}
+          className={`text-yellow-400 animate-pulse cursor-pointer mb-4 ${isAlerting ? 'transform scale-110' : ''}`}
           onClick={handlePanicClick}
         />
-        <h2 className="text-2xl font-bold text-gray-800 mt-4 mb-6">
+        <h2 className="text-white-800 text-xl font-bold mb-4">
           {isAlerting ? 'Stop SOS Alert' : 'Emergency SOS'}
         </h2>
 
         {locationLink && (
-          <p className="text-gray-600 text-sm text-center">
-            Sharing live location: <a href={locationLink} target="_blank" rel="noopener noreferrer" className="underline text-blue-600">{locationLink}</a>
+          <p className="text-gray-600 mb-4">
+            Sharing live location: 
+            <a href={locationLink} target="_blank" rel="noopener noreferrer" className="underline text-blue-600">
+              {locationLink}
+            </a>
           </p>
         )}
 
-        <div className="w-full">
-          <div className="flex flex-col items-center mb-4">
-            <label className="text-sm font-medium text-gray-600">User Contact</label>
-            <button
-              className={`mt-2 px-4 py-2 text-sm rounded-lg border ${useRecentContact ? 'border-gray-300 text-gray-500' : 'border-green-500 text-green-600'}`}
-              onClick={askForPhoneNumber}
-            >
-              {phoneNumber ? `Send to: ${phoneNumber}` : 'Enter new phone number'}
-            </button>
-          </div>
-
-          <div className="flex flex-col items-center">
-            <label className="text-sm font-medium text-gray-600">Recent Contact</label>
-            <button
-              className={`mt-2 px-4 py-2 text-sm rounded-lg border ${useRecentContact ? 'border-green-500 text-green-600' : 'border-gray-300 text-gray-500'}`}
-              onClick={() => setUseRecentContact(true)}
-            >
-              Send to: +91{defaultPhoneNumber}
-            </button>
+        <div className="w-full mt-4 flex flex-col items-center">
+          <label className="text-sm font-medium mb-2">Select User Contact</label>
+          <div className="flex items-center">
+            <span className={`mr-2 ${useRecentContact ? 'text-yellow-600' : 'text-gray-400'}`}>Recent Contact</span>
+            <label className="switch">
+              <input
+                type="checkbox"
+                checked={useRecentContact}
+                onChange={() => {
+                  if (useRecentContact) {
+                    setUseRecentContact(false); // Switch to entering new number
+                    askForPhoneNumber();
+                  } else {
+                    setUseRecentContact(true); // Switch to recent contact
+                  }
+                }}
+              />
+              <span className="slider round"></span>
+            </label>
+            <span className={`ml-2 ${!useRecentContact ? 'text-yellow-600' : 'text-gray-400'}`}>Enter Number</span>
           </div>
         </div>
       </CardBody>
+      <style jsx>{`
+        .switch {
+          position: relative;
+          display: inline-block;
+          width: 60px;
+          height: 34px;
+          margin: 0 10px;
+        }
+
+        .switch input {
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #ccc;
+          transition: .4s;
+          border-radius: 34px;
+          border: 2px solid #d1d1d1;
+        }
+
+        .slider:before {
+          position: absolute;
+          content: "";
+          height: 26px;
+          width: 26px;
+          left: 4px;
+          bottom: 4px;
+          background-color: white;
+          transition: .4s;
+          border-radius: 50%;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked + .slider {
+          background-color: #66bb6a;
+          border-color: #5cb85c;
+        }
+
+        input:checked + .slider:before {
+          transform: translateX(26px);
+        }
+
+        /* Hover effect for the card */
+        .hover\:scale-105:hover {
+          transform: scale(1.05);
+        }
+      `}</style>
     </Card>
   );
 };
