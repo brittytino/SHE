@@ -73,11 +73,11 @@ Because you know this isn't some lame project from 2015...
 
 1. Clone this gem of a project:
    ```bash
-   git clone https://github.com/your-username/she-app.git
+   git clone https://github.com/brittytino/SHE.git
    ```
 2. Move into the project directory (because why else would you clone it?):
    ```bash
-   cd she-app
+   cd SHE
    ```
 3. Install the required dependencies like the responsible developer you are:
    ```bash
