@@ -133,7 +133,7 @@ export const PanicButton: React.FC = () => {
   }, [vibrationInterval]);
 
   return (
-    <Card className="xl:max-w-lg bg-default-50 rounded-xl shadow-lg p-8 w-full mx-auto transition-transform transform hover:scale-105">
+    <Card className="bg-default-50 rounded-xl shadow-md px-4 py-6 w-full mx-auto transition-transform transform hover:scale-105">
       <CardBody className="flex flex-col items-center">
         <FaExclamationTriangle
           size={100}

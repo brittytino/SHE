@@ -10,6 +10,7 @@ import { CardAgents } from "./card-agents";
 import { CardSafetyLogs } from "./card-transactions";
 import SaferRoute from "./safer-route";
 import ChatbotWidget from "./chat-bot";
+import AudioRecorder from "./audio-recorder";
 
 import { PanicButton } from "./pannic-button";
 import { Link } from "@nextui-org/react";
@@ -37,6 +38,7 @@ export const Content = () => (
         {/* Chart */}
         <div className="h-full flex flex-col gap-2">
         <PanicButton />
+        <AudioRecorder />
           <h3 className="text-xl font-semibold">SHE - Report Statistics</h3>
           <div className="w-full bg-default-50 shadow-lg rounded-2xl p-6 ">
             <Chart />
