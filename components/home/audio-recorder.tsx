@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaMicrophone, FaStop } from 'react-icons/fa';
+import { FaMicrophone, FaStop, FaClock, FaSignOutAlt, FaSignInAlt } from 'react-icons/fa';
 import { Card, CardBody } from '@nextui-org/react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, User } from 'firebase/auth';
 
-// Firebase configuration (replace with your own configuration)
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCu2SsMedz9jYpUC2ernFPALFI8HyjcrzI",
   authDomain: "she-protect-her.firebaseapp.com",
@@ -19,15 +19,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Google OAuth credentials and Drive API configuration
+// Google Drive API configuration
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
-const FOLDER_ID = '1gyFdvZDbjvcg8ateiRD2AAAzESJ51yyi'; // Your folder ID
+const FOLDER_ID = '1gyFdvZDbjvcg8ateiRD2AAAzESJ51yyi'; // Replace with your folder ID
 
 const AudioRecorder: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [firebaseUser, setFirebaseUser] = useState<User | null>(null);
+  const [seconds, setSeconds] = useState(0);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null); // Reference to the interval
 
   // Firebase Authentication
   const handleSignIn = async () => {
@@ -47,11 +49,7 @@ const AudioRecorder: React.FC = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setFirebaseUser(user);
-      } else {
-        setFirebaseUser(null);
-      }
+      setFirebaseUser(user);
     });
     return () => unsubscribe();
   }, []);
@@ -67,6 +65,10 @@ const AudioRecorder: React.FC = () => {
       };
 
       setIsRecording(true);
+      setSeconds(0); // Reset seconds
+      intervalRef.current = setInterval(() => {
+        setSeconds((prev) => prev + 1);
+      }, 1000);
     } catch (error) {
       console.error('Error accessing microphone', error);
     }
@@ -75,11 +77,14 @@ const AudioRecorder: React.FC = () => {
   const handleStopRecording = () => {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
+      clearInterval(intervalRef.current!); // Clear the timer interval
+      setIsRecording(false);
+      setSeconds(0); // Reset seconds after stopping
+
       mediaRecorderRef.current.onstop = async () => {
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
         audioChunksRef.current = []; // Clear the recorded chunks
         await uploadToGoogleDrive(audioBlob);
-        setIsRecording(false);
       };
     }
   };
@@ -91,8 +96,7 @@ const AudioRecorder: React.FC = () => {
     }
 
     try {
-      const user = firebaseUser;
-      const token = await user.getIdToken();
+      const token = await firebaseUser.getIdToken(true); // Force refresh token
       const metadata = {
         name: `recording_${Date.now()}.wav`,
         mimeType: 'audio/wav',
@@ -116,7 +120,8 @@ const AudioRecorder: React.FC = () => {
         console.log('File uploaded successfully:', data);
         alert('File uploaded successfully!');
       } else {
-        console.error('Error uploading file:', await response.text());
+        const errorText = await response.text();
+        console.error('Error uploading file:', errorText);
       }
     } catch (error) {
       console.error('Upload failed', error);
@@ -126,42 +131,46 @@ const AudioRecorder: React.FC = () => {
   return (
     <Card className="bg-default-50 rounded-xl shadow-md p-4">
       <CardBody className="py-5">
-        <div className="flex justify-center mb-4">
-          <div className="border-dashed border-2 border-divider py-2 px-6 rounded-xl">
-            <span className="text-default-900 text-xl font-semibold">
-              Audio Recorder
-            </span>
-          </div>
+        <div className="flex flex-col items-center mb-4">
+          <h2 className="border-dashed border-2 border-divider py-2 px-6 rounded-xl text-default-900 text-xl font-semibold">Audio Recorder</h2>
         </div>
 
         <div className="flex flex-col items-center gap-4">
           {!firebaseUser ? (
             <button 
               onClick={handleSignIn} 
-              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+              className="bg-blue-500 text-white py-2 px-4 rounded flex items-center hover:bg-blue-600 transition"
             >
-              Sign In with Google
+              <FaSignInAlt className="mr-2" /> Sign In with Google
             </button>
           ) : (
             <>
               <button 
                 onClick={handleSignOut} 
-                className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
+                className="bg-red-500 text-white py-2 px-4 rounded flex items-center hover:bg-red-600 transition"
               >
-                Sign Out
+                <FaSignOutAlt className="mr-2" /> Sign Out
               </button>
               <div className="flex flex-col items-center">
                 <button 
                   onClick={isRecording ? handleStopRecording : handleStartRecording}
-                  className={`text-white py-2 px-4 rounded ${
-                    isRecording ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'
-                  }`}
+                  className={`text-white py-4 px-4 rounded ${isRecording ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'} transition`}
                 >
-                  {isRecording ? <FaStop /> : <FaMicrophone />}
+                  {isRecording ? (
+                    <FaStop size={40} />
+                  ) : (
+                    <FaMicrophone size={40} />
+                  )}
                 </button>
                 <p className="mt-2 text-center">
                   {isRecording ? 'Recording...' : 'Click to start recording'}
                 </p>
+                {isRecording && (
+                  <div className="flex items-center mt-4">
+                    <FaClock className="mr-2 text-gray-600" size={24} />
+                    <span className="text-lg font-semibold">{seconds}s</span>
+                  </div>
+                )}
               </div>
             </>
           )}
