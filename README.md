@@ -15,7 +15,7 @@
 - [Tech Stack That Powers Us](#tech-stack-that-powers-us)
 - [Features to Keep You Safe](#features-to-keep-you-safe)
 - [How it Works (And How We Get You Out of Trouble)](#how-it-works-and-how-we-get-you-out-of-trouble)
-- [Installation Guide for Brave Souls](#installation-guide-for-brave-souls)
+- [Installation Guide for Brave Ssouls](#installation-guide-for-brave-souls)
 - [Usage - How to Save Your Skin](#usage---how-to-save-your-skin)
 - [Because We Care About Security](#because-we-care-about-security)
 - [Roadmap to World Domination](#roadmap-to-world-domination)
